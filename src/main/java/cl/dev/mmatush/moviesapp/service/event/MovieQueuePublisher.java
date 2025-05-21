@@ -1,4 +1,4 @@
-package cl.dev.mmatush.moviesapp.service;
+package cl.dev.mmatush.moviesapp.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

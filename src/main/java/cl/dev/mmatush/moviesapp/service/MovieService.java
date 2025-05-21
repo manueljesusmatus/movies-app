@@ -21,4 +21,9 @@ public interface MovieService {
     Optional<Movie> updateMovieIfExists(Movie movie);
 
     Movie toEntity(MovieDto movieDto);
+
+    MovieDto toDto(Movie movie);
+
+    MovieDto getMovieDetails(String movieId);
+
 }

@@ -1,6 +1,8 @@
 package cl.dev.mmatush.moviesapp.service.impl;
 
+import cl.dev.mmatush.moviesapp.configuration.property.XPathProperties;
 import cl.dev.mmatush.moviesapp.exception.DataException;
+import cl.dev.mmatush.moviesapp.exception.ScraperException;
 import cl.dev.mmatush.moviesapp.model.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
 import cl.dev.mmatush.moviesapp.repository.MovieRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,8 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
     private final ModelMapper modelMapper;
+    private final ScraperService scraperService;
+    private final XPathProperties xPathProperties;
 
     @Override
     public Optional<Movie> readMovie(String id) {
@@ -91,6 +96,23 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie toEntity(MovieDto movieDto) {
         return modelMapper.map(movieDto, Movie.class);
+    }
+
+    @Override
+    public MovieDto toDto(Movie movie) {
+        return modelMapper.map(movie, MovieDto.class);
+    }
+
+    @Override
+    public MovieDto getMovieDetails(String movieId) {
+        try {
+            log.info("Obteniendo metadata de <movie: {}>", movieId);
+            Map<String, Object> result = scraperService.extractData(xPathProperties.getUrl() + movieId.toLowerCase());
+            log.debug("metadata <result: {}>", result);
+            return modelMapper.map(result, MovieDto.class);
+        } catch (Exception e) {
+            throw new ScraperException("Error obteniendo detalle de pelicula", e);
+        }
     }
 
 }

@@ -1,9 +1,10 @@
 package cl.dev.mmatush.moviesapp.service;
 
-import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import java.io.IOException;
+import java.util.Map;
 
 public interface ScraperService {
 
-    MovieDto getMovieDetails(String movieId);
+    Map<String, Object> extractData(String url) throws IOException;
 
 }

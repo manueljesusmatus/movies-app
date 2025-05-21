@@ -40,7 +40,16 @@ public class MovieController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping
+    @PostMapping("")
+    public ResponseEntity<Movie> postMovie(@RequestBody MovieDto movie) {
+        return movieService.createMovie(movie)
+                .map(result -> {
+                    log.debug(TEMPLATE_LOG, HttpStatus.CREATED, result);
+                    return new ResponseEntity<>(result, HttpStatus.CREATED);
+                }).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @GetMapping("")
     public List<Movie> getAllMovies() {
         return movieService.readAllMovies();
     }
@@ -55,13 +64,9 @@ public class MovieController {
         return movieService.readAllMovies(pageable);
     }
 
-    @PostMapping
-    public ResponseEntity<Movie> postMovie(@RequestBody MovieDto movie) {
-        return movieService.createMovie(movie)
-                .map(result -> {
-                    log.debug(TEMPLATE_LOG, HttpStatus.CREATED, result);
-                    return new ResponseEntity<>(result, HttpStatus.CREATED);
-                }).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    @GetMapping("/data/{id}")
+    public MovieDto getMovieDetails(@PathVariable String id) {
+        return movieService.getMovieDetails(id);
     }
 
 }
