@@ -1,10 +1,9 @@
 package cl.dev.mmatush.moviesapp.security;
 
+import cl.dev.mmatush.moviesapp.configuration.property.ApiKeyProperties;
 import cl.dev.mmatush.moviesapp.service.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,29 +11,39 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
 @RequiredArgsConstructor
-public class ApiKeyAuthenticationFilter extends GenericFilterBean {
+public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationService authenticationService;
+    private final ApiKeyProperties apiKeyProperties;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
-            Authentication authentication = authenticationService.getAuthentication((HttpServletRequest) request);
+            String path = request.getRequestURI();
+
+            boolean isWhitelisted = apiKeyProperties.getWhitelist().stream()
+                    .anyMatch(path::contains);
+
+            if (isWhitelisted) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Authentication authentication = authenticationService.getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (Exception exp) {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            PrintWriter writer = httpResponse.getWriter();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            PrintWriter writer = response.getWriter();
             writer.print(exp.getMessage());
             writer.flush();
             writer.close();
