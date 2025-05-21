@@ -1,6 +1,6 @@
 package cl.dev.mmatush.moviesapp.service;
 
-import cl.dev.mmatush.moviesapp.configuration.XPathProperties;
+import cl.dev.mmatush.moviesapp.configuration.property.XPathProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.htmlunit.BrowserVersion;
