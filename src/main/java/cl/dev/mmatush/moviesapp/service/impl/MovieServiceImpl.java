@@ -10,11 +10,11 @@ import cl.dev.mmatush.moviesapp.service.MovieService;
 import cl.dev.mmatush.moviesapp.service.ScraperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class MovieServiceImpl implements MovieService {
     public Movie readMovie(String id) {
         log.info("GET movie <id: {}>", id);
         try {
-            if (!StringUtils.hasLength(id))
+            if (StringUtils.isBlank(id))
                 throw new DataException("Movie id es empty");
             return movieRepository.findById(id.toUpperCase())
                     .map(m -> {
@@ -75,6 +75,8 @@ public class MovieServiceImpl implements MovieService {
         try {
             Movie movie = toEntity(movieDto);
             log.info("SAVE movie <id: {}>", movie.getId());
+            if (StringUtils.isBlank(movie.getId()))
+                throw new DataException("Movie id es empty");
             Optional<Movie> movieOptional = movieRepository.findById(movie.getId().toUpperCase());
             if (movieOptional.isPresent()) {
                 log.warn("Movie <id: {}> ya existe", movie.getId());
@@ -92,6 +94,8 @@ public class MovieServiceImpl implements MovieService {
     public Optional<Movie> updateMovieIfExists(Movie movie) {
         log.info("UPDATE movie <id: {}>", movie.getId());
         try {
+            if (StringUtils.isBlank(movie.getId()))
+                throw new DataException("Movie id es empty");
             Optional<Movie> movieOptional = movieRepository.findById(movie.getId().toUpperCase());
             if (movieOptional.isEmpty()) {
                 log.warn("Movie <id: {}> no existe", movie.getId());
@@ -105,12 +109,20 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie toEntity(MovieDto movieDto) {
-        return modelMapper.map(movieDto, Movie.class);
+        try {
+            return modelMapper.map(movieDto, Movie.class);
+        } catch (Exception e) {
+            throw new DataException("Error al mapear Dto movie", e);
+        }
     }
 
     @Override
     public MovieDto toDto(Movie movie) {
-        return modelMapper.map(movie, MovieDto.class);
+        try {
+            return modelMapper.map(movie, MovieDto.class);
+        } catch (Exception e) {
+            throw new DataException("Error al mapear Document movie", e);
+        }
     }
 
     @Override
