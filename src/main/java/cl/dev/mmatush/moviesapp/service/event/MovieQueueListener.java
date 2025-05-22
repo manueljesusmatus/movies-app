@@ -16,9 +16,14 @@ public class MovieQueueListener {
 
     @RabbitListener(queues = "movieIdQueue")
     public void receiveMovieId(String movieId) {
-        log.info("Recibiendo movie <id: {}>", movieId);
-        MovieDto movie = movieService.getMovieDetails(movieId);
-        movieService.createMovie(movie);
+        try {
+            log.info("Recibiendo movie <id: {}>", movieId);
+            MovieDto movie = movieService.getMovieDetails(movieId);
+            movieService.createMovie(movie);
+        } catch (Exception e) {
+            log.error("Error al recibir movie <id: {}>", movieId, e);
+        }
+
     }
 
 }

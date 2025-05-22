@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MovieService {
 
-    Optional<Movie> readMovie(String id);
+    Movie readMovie(String id);
 
     List<Movie> readAllMovies();
 

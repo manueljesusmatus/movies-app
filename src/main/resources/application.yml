@@ -31,7 +31,6 @@ server:
 logging:
   level:
     cl.dev.mmatush: TRACE
-    org.htmlunit.WebClient: DEBUG
 
 # Scraping config
 data:
@@ -67,7 +66,7 @@ management:
 # Info config
 info:
   app:
-    name: movies-app
+    name: Movies API
     description: Microservicio de peliculas
     version: 1.0.0
     env: dev
@@ -78,3 +77,8 @@ auth:
   api-secret: ${API-KEY-SECRET:secret}
   whitelist:
     - /actuator/health
+    - /swagger-ui
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /v3/api-docs
+    - /v3/api-docs/**

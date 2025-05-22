@@ -31,12 +31,16 @@ public class MovieServiceImpl implements MovieService {
     private final XPathProperties xPathProperties;
 
     @Override
-    public Optional<Movie> readMovie(String id) {
+    public Movie readMovie(String id) {
         log.info("GET movie <id: {}>", id);
         try {
             if (!StringUtils.hasLength(id))
-                return Optional.empty();
-            return movieRepository.findById(id.toUpperCase());
+                throw new DataException("Movie id es empty");
+            return movieRepository.findById(id.toUpperCase())
+                    .map(m -> {
+                        log.debug("Movie recuperada <Movie: {}>", m);
+                        return m;
+                    }).orElse(null);
         } catch (Exception e) {
             throw new DataException("Error al recuperar registro de pelicula", e);
         }
@@ -46,7 +50,9 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> readAllMovies() {
         log.info("GET all movies");
         try {
-            return movieRepository.findAll();
+            List<Movie> movies = movieRepository.findAll();
+            log.debug("Movies recuperadas <Movies: Lista de {} registros>", movies.size());
+            return movies;
         } catch (Exception e) {
             throw new DataException("Error al recuperar registro de peliculas", e);
         }
@@ -54,9 +60,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Page<Movie> readAllMovies(Pageable pageable) {
-        log.info("GET all movies pageable");
+        log.info("GET all movies pageable <size: {}, number: {}>", pageable.getPageSize(), pageable.getPageNumber());
         try {
-            return movieRepository.findAll(pageable);
+            Page<Movie> page = movieRepository.findAll(pageable);
+            log.debug("Page recuperada <Page: {}>", page);
+            return page;
         } catch (Exception e) {
             throw new DataException("Error al recuperar registro de peliculas", e);
         }
@@ -72,7 +80,9 @@ public class MovieServiceImpl implements MovieService {
                 log.warn("Movie <id: {}> ya existe", movie.getId());
                 return movieOptional;
             }
-            return Optional.of(movieRepository.save(movie));
+            Movie res = movieRepository.save(movie);
+            log.debug("Movie creada <Movie: {}>", res);
+            return Optional.of(res);
         } catch (Exception e) {
             throw new DataException("Error al guardar registro de pelicula", e);
         }
@@ -108,7 +118,7 @@ public class MovieServiceImpl implements MovieService {
         try {
             log.info("Obteniendo metadata de <movie: {}>", movieId);
             Map<String, Object> result = scraperService.extractData(xPathProperties.getUrl() + movieId.toLowerCase());
-            log.debug("metadata <result: {}>", result);
+            log.debug("Data obtenida de la web <Movie: {}>", result);
             return modelMapper.map(result, MovieDto.class);
         } catch (Exception e) {
             throw new ScraperException("Error obteniendo detalle de pelicula", e);
