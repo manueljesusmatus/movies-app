@@ -1,0 +1,14 @@
+.scrollable-content:hover,
+.scrollable-content:active,
+.scrollable-content:focus {
+    overflow-y: scroll;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 10px;
+}

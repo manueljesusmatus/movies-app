@@ -82,3 +82,12 @@ auth:
     - /swagger-ui.html
     - /v3/api-docs
     - /v3/api-docs/**
+    - /backoffice
+    - /backoffice/**
+    - /backoffice/**
+    - /backoffice/chat/**
+    - /styles
+    - /styles/**
+    - /css/**
+    - /js/**
+    - /images/**

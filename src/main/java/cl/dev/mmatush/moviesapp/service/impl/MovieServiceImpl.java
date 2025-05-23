@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = {"movies"})
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
@@ -31,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
     private final XPathProperties xPathProperties;
 
     @Override
+    @Cacheable(key = "#id")
     public Movie readMovie(String id) {
         log.info("GET movie <id: {}>", id);
         try {

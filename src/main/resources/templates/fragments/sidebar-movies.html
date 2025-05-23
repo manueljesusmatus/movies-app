@@ -1,0 +1,15 @@
+<div th:fragment="sidebar-content (title, movies)">
+    <h3 class="text-sm font-semibold m-2" th:text="${title}"></h3>
+    <ul>
+        <li th:each="movie : ${movies}" class="py-1 px-2 hover:bg-slate-800">
+            <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}" class="hover:text-purple-500 flex" >
+                <img class="rounded-lg w-14 h-fit mr-2" th:src="${movie.image}" alt="movie image">
+                <div class="flex flex-col w-full">
+                    <p class="text-sm font-bold" th:text="${movie.id}"></p>
+                    <p class="text-xs text-[#adadb8] w-3/4 whitespace-nowrap overflow-hidden text-ellipsis" th:text="${#strings.arrayJoin(movie.cast.toArray(), ' - ')}"></p>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <a class="text-xs text-purple-500 py-1 px-2 hover:cursor-pointer">Mostrar más</a>
+</div>
