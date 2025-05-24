@@ -1,15 +1,12 @@
-<nav th:fragment="navbar" class="bg-[#18181b] h-[50px] text-white px-4 py-3 flex items-center justify-between shadow-md">
+<nav th:fragment="navbar" class="bg-[#18181b] h-[50px] text-white px-4 flex items-center justify-between shadow-md">
     <!-- Logo -->
-    <div class="flex items-center space-x-2">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg" alt="Logo" class="h-6 w-auto">
-        <span class="text-md font-bold">Mi App</span>
-    </div>
-
-
-    <div class="hidden md:flex space-x-4">
-      <a href="#" class="hover:text-purple-400">Inicio</a>
-      <a href="#" class="hover:text-purple-400">Películas</a>
-      <a href="#" class="hover:text-purple-400">Contacto</a>
+    <div class="flex gap-2 space-x-4 items-center h-full">
+        <a class="flex items-center space-x-2" th:href="@{/backoffice/home}">
+            <img th:src="@{/images/mishtv.png}" alt="Logo" class="h-6 w-auto">
+            <span class="text-md font-bold">Mish.tv</span>
+        </a>
+        <a th:href="@{/backoffice/directory}" class="flex h-full hover:text-purple-400 font-semibold items-center px-2 hover:border-solid hover:border-b-2 hover:border-purple-500">Películas</a>
+        <a th:href="@{/backoffice/directory?pageNumber=1}" class="flex h-full hover:text-purple-400 font-semibold items-center px-2 hover:border-solid hover:border-b-2 hover:border-purple-500">Favoritas</a>
     </div>
 
     <!-- Perfil -->

@@ -1,3 +1,15 @@
+.hoverable-content {
+    background: linear-gradient(180deg,#9146ff 0,#69ffc3 61.98%,#1e69ff);
+}
+
+.hoverable-content:hover {
+    transform: translate3d(0.6rem, -0.6rem, 0px);
+}
+
+.clip-inset {
+    clip-path: inset(5px);
+}
+
 .scrollable-content:hover,
 .scrollable-content:active,
 .scrollable-content:focus {

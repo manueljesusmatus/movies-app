@@ -1,4 +1,4 @@
-<div th:fragment="sidebar-content (title, movies)">
+<th:block th:fragment="sidebar-content (title, movies)">
     <h3 class="text-sm font-semibold m-2" th:text="${title}"></h3>
     <ul>
         <li th:each="movie : ${movies}" class="py-1 px-2 hover:bg-slate-800">
@@ -11,5 +11,5 @@
             </a>
         </li>
     </ul>
-    <a class="text-xs text-purple-500 py-1 px-2 hover:cursor-pointer">Mostrar más</a>
-</div>
+    <a class="block text-xs text-purple-500 py-1 px-2 mb-3 hover:cursor-pointer">Mostrar más</a>
+</th:block>

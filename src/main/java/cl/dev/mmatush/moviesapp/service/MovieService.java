@@ -12,6 +12,12 @@ public interface MovieService {
 
     Movie readMovie(String id);
 
+    List<Movie> readMoviesByCast(String actor);
+
+    List<Movie> readMoviesByStudio(String studio);
+
+    List<Movie> readMoviesByGenre(String genre);
+
     List<Movie> readAllMovies();
 
     Page<Movie> readAllMovies(Pageable pageable);

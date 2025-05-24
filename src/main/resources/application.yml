@@ -90,4 +90,5 @@ auth:
     - /styles/**
     - /css/**
     - /js/**
+    - /images
     - /images/**

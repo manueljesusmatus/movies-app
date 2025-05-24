@@ -51,6 +51,48 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<Movie> readMoviesByCast(String actor){
+        log.info("GET movies by cast");
+        try {
+            if (StringUtils.isBlank(actor))
+                throw new DataException("Cast id es empty");
+            List<Movie> movieList = movieRepository.findMovieByCastContainsIgnoreCase(List.of(actor));
+            log.debug("Movies recuperados <Actor: {}, Movie: {}>", actor, movieList.size());
+            return movieList;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas por cast", e);
+        }
+    }
+
+    @Override
+    public List<Movie> readMoviesByStudio(String studio){
+        log.info("GET movies by studio");
+        try {
+            if (StringUtils.isBlank(studio))
+                throw new DataException("Studio id es empty");
+            List<Movie> movieList = movieRepository.findMovieByStudioEqualsIgnoreCase(studio);
+            log.debug("Movies recuperados <Studio: {}, Movie: {}>", studio, movieList.size());
+            return movieList;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas de studio", e);
+        }
+    }
+
+    @Override
+    public List<Movie> readMoviesByGenre(String genre){
+        log.info("GET movies by genre");
+        try {
+            if (StringUtils.isBlank(genre))
+                throw new DataException("Genre id es empty");
+            List<Movie> movieList = movieRepository.findMovieByGenresContainsIgnoreCase(genre);
+            log.debug("Movies recuperados <Genre: {}, Movie: {}>", genre, movieList.size());
+            return movieList;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas por genre", e);
+        }
+    }
+
+    @Override
     public List<Movie> readAllMovies() {
         log.info("GET all movies");
         try {

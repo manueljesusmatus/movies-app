@@ -42,6 +42,21 @@ public class MovieController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
+    @GetMapping("/cast/{actor}")
+    public List<Movie> getMoviesByCast(@PathVariable String actor) {
+        return movieService.readMoviesByCast(actor);
+    }
+
+    @GetMapping("/studio/{studio}")
+    public List<Movie> getMoviesByStudio(@PathVariable String studio) {
+        return movieService.readMoviesByStudio(studio);
+    }
+
+    @GetMapping("/genre/{genre}")
+    public List<Movie> getMoviesByGenre(@PathVariable String genre) {
+        return movieService.readMoviesByGenre(genre);
+    }
+
     @GetMapping("")
     public List<Movie> getAllMovies() {
         return movieService.readAllMovies();
