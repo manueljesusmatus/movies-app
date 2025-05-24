@@ -36,7 +36,7 @@
 
         <!-- Video -->
         <div class="w-full" style="height: calc(100vh - 170px)">
-            <iframe th:src="@{https://www.youtube.com/embed/dQw4w9WgXcQ}" class="w-full rounded" style="height: calc(100vh - 170px)" allowfullscreen></iframe>
+            <iframe title="Movie" th:src="@{https://www.youtube.com/embed/dQw4w9WgXcQ}" class="w-full rounded" style="height: calc(100vh - 170px)" allowfullscreen></iframe>
         </div>
 
         <!-- Movie Info -->
@@ -51,7 +51,7 @@
                            class="text-xs text-purple-500 hover:cursor-pointer">
                         </a>
                     </p>
-                    <h1 class="text-md font-bold w-3/4 whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}"></h1>
+                    <h1 class="text-md font-bold w-3/4 whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}">Movie title</h1>
                     <p class="justify-center">
                         <span class="text-sm text-gray-400" th:text="${movie.date}">
                         </span>

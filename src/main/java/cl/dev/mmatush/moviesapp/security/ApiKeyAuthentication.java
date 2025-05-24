@@ -1,10 +1,12 @@
 package cl.dev.mmatush.moviesapp.security;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+@EqualsAndHashCode(callSuper = false)
 public class ApiKeyAuthentication extends AbstractAuthenticationToken {
 
     private final String apiKey;

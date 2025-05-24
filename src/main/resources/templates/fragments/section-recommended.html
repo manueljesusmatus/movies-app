@@ -1,0 +1,40 @@
+<th:block th:fragment="section-recommended (moviesList, mostrarMas)">
+    <div class="grid grid-cols-5 gap-4">
+        <article th:each="movie : ${moviesList}">
+            <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}">
+                <div class="hoverable-content" >
+                    <div class="clip-inset">
+                        <img class="rounded-lg w-full" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
+                    </div>
+                </div>
+                <p class="w-full whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}"></p>
+                <p th:text="${movie.date}" class="text-xs text-[#adadb8]"></p>
+            </a>
+            <div class="flex flex-row gap-1">
+                <a th:each="actor : ${movie.cast}" th:text="'#' + ${actor}" th:href="@{/backoffice/cast/{actor}(actor=${actor})}"
+                   class="text-xs text-purple-500 hover:cursor-pointer">
+                </a>
+            </div>
+            <div class="my-0.5">
+                <a th:href="@{/backoffice/studio/{studio}(studio=${movie.studio})}">
+                        <span th:text="${movie.studio}"
+                              class="inline-block bg-yellow-600 text-slate-800 rounded-full px-2 text-[11px] font-bold"></span>
+                </a>
+            </div>
+        </article >
+    </div>
+    <div class="flex pt-2 mb-4 -mt-4 text-center">
+        <div class="relative w-full">
+            <div class="w-full absolute border-solid border-t " style="border-color: rgba(83, 83, 95, 0.48); top: 50%"></div>
+        </div>
+        <a th:href="@{${mostrarMas}}">
+            <button type="submit"
+                    class="px-2 mx-2 text-purple-500 whitespace-nowrap rounded-md font-semibold text-sm button-hoverable h-8">
+                Mostrar todo
+            </button>
+        </a>
+        <div class="relative w-full">
+            <div class="w-full absolute border-solid border-t " style="border-color: rgba(83, 83, 95, 0.48); top: 50%"></div>
+        </div>
+    </div>
+</th:block>
