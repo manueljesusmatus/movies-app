@@ -26,7 +26,7 @@
     </aside>
 
     <!-- Maincard -->
-    <main class="w-full relative flex flex-col px-6 py-4 overflow-hidden scrollable-content" style="scrollbar-width: none">
+    <main class="w-full relative flex flex-col px-6 py-4 gap-4 overflow-hidden scrollable-content" style="scrollbar-width: none">
 
         <h1 class="text-[54px] font-bold py-2" th:text="${titlePage}">Titles</h1>
 
@@ -60,13 +60,41 @@
 
         </div>
 
-        <div th:if="${urls}">
-            <h2 class="text-lg font-bold py-2"></h2>
+        <div th:if="${moviesFailed != null && moviesFailed.size() > 0}">
+            <h2 class="text-3xl font-bold py-2">Películas con error</h2>
             <ul class="flex flex-col gap-2 text-purple-500">
-                <li th:each="url : ${urls}">
-                    <a th:href="${url}" th:text="${url}">Enlace</a>
+                <li th:each="movie : ${moviesFailed}">
+                    <a th:href="@{/backoffice/movie/{id}(id=${movie})}" th:text="${movie}">Enlace</a>
                 </li>
             </ul>
+        </div>
+
+        <div th:if="${moviesDownloaded != null && moviesDownloaded.size() > 0}">
+            <h2 class="text-3xl font-bold py-2">Películas descargadas</h2>
+            <div class="grid grid-cols-5 gap-4">
+                <article th:each="movie : ${moviesDownloaded}">
+                    <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}">
+                        <div class="hoverable-content" >
+                            <div class="clip-inset">
+                                <img class="rounded-lg w-full" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
+                            </div>
+                        </div>
+                        <p class="w-full whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}"></p>
+                        <p th:text="${movie.date}" class="text-xs text-[#adadb8]"></p>
+                    </a>
+                    <div class="flex flex-row gap-1">
+                        <a th:each="actor : ${movie.cast}" th:text="'#' + ${actor}" th:href="@{/backoffice/cast/{actor}(actor=${actor})}"
+                           class="text-xs text-purple-500 hover:cursor-pointer">
+                        </a>
+                    </div>
+                    <div class="my-0.5">
+                        <a th:href="@{/backoffice/studio/{studio}(studio=${movie.studio})}">
+                        <span th:text="${movie.studio}"
+                              class="inline-block bg-yellow-600 text-slate-800 rounded-full px-2 text-[11px] font-bold"></span>
+                        </a>
+                    </div>
+                </article >
+            </div>
         </div>
 
 

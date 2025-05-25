@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/backoffice")
@@ -35,6 +35,8 @@ public class BackofficeController {
     private static final String MOVIES_FOLLOWED_LIST = "moviesFollowed";
     private static final String MOVIES_AVAILABLE_LIST = "moviesAvailable";
     private static final String MOVIES_RECOMMENDED_LIST = "moviesRecommended";
+    private static final String MOVIES_DOWNLOADED_LIST = "moviesDownloaded";
+    private static final String MOVIES_FAILED_LIST = "moviesFailed";
 
     private static final String DIRECTORY_PAGE = "directory";
     private static final String FORMULARIO_PAGE = "formulario";
@@ -105,45 +107,62 @@ public class BackofficeController {
 
     @GetMapping("/formulario")
     public String showFormulario(Model model) {
-        List<String> urls = (List<String>) model.getAttribute("urls");
+        List<Movie> moviesDownloaded = (List<Movie>) model.getAttribute(MOVIES_DOWNLOADED_LIST);
+        List<String> moviesFailed = (List<String>) model.getAttribute(MOVIES_FAILED_LIST);
         loadMovies(model);
         model.addAttribute(TITLE_ATTRIBUTE, "Ingresar datos");
-        model.addAttribute("urls", CollectionUtils.isEmpty(urls) ? new ArrayList<>() : urls);
+        model.addAttribute(MOVIES_DOWNLOADED_LIST, CollectionUtils.isEmpty(moviesDownloaded) ? new ArrayList<>() : moviesDownloaded);
+        model.addAttribute(MOVIES_FAILED_LIST, CollectionUtils.isEmpty(moviesFailed) ? new ArrayList<>() : moviesFailed);
         return FORMULARIO_PAGE;
     }
 
     @PostMapping("/saveMovieList")
     public String saveMovieList(@ModelAttribute("moviesCreate") String moviesCreate, RedirectAttributes redirectAttributes) {
-        List<String> urls = new ArrayList<>();
+        List<Movie> moviesDownloaded = new ArrayList<>();
+        List<String> moviesFailed = new ArrayList<>();
         List.of(moviesCreate.split(",")).forEach( movieId -> {
             try {
-                MovieDto res = movieService.getMovieDetails(movieId);
-                Optional<Movie> optionalMovie = movieService.createMovie(res);
-                if (optionalMovie.isPresent()) {
-                    urls.add("http://localhost:8077/api/v1/backoffice/movie/" + optionalMovie.get().getId());
-                } else {
-                    urls.add("NO ENCONTRADO: " + movieId);
-                }
+                downloadMovies(movieId, moviesDownloaded, moviesFailed);
             } catch (Exception e) {
-                log.error("Error al guardar", e);
-                urls.add("NO ENCONTRADO: " + movieId);
+                log.error("Error al guardar {}", movieId, e);
+                moviesFailed.add(movieId);
             }
         });
-        redirectAttributes.addFlashAttribute("urls", urls);
+        redirectAttributes.addFlashAttribute(MOVIES_DOWNLOADED_LIST, moviesDownloaded);
+        redirectAttributes.addFlashAttribute(MOVIES_FAILED_LIST, moviesFailed);
         return "redirect:/backoffice/formulario";
     }
 
     @PostMapping("/saveMovie")
-    public String saveMovie(@ModelAttribute("movie") MovieDto movie) {
-        MovieDto result = movieService.getMovieDetails(movie.getId());
-        movieService.createMovie(result);
-        return "redirect:/backoffice/movie/" + result.getId();
+    public String saveMovie(@ModelAttribute("movie") MovieDto movie, RedirectAttributes redirectAttributes) {
+        List<Movie> moviesDownloaded = new ArrayList<>();
+        List<String> moviesFailed = new ArrayList<>();
+
+        downloadMovies(movie.getId(), moviesDownloaded, moviesFailed);
+        redirectAttributes.addFlashAttribute(MOVIES_DOWNLOADED_LIST, moviesDownloaded);
+        redirectAttributes.addFlashAttribute(MOVIES_FAILED_LIST, moviesFailed);
+        return "redirect:/backoffice/formulario";
     }
 
     private void loadMovies(Model model) {
         model.addAttribute(MOVIES_FOLLOWED_LIST, movieService.readAllMovies(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
         model.addAttribute(MOVIES_AVAILABLE_LIST, movieService.readAllMovies(PageRequest.of(PAGE_OFFSET + 1, PAGE_SIZE)));
         model.addAttribute(MOVIES_RECOMMENDED_LIST, movieService.readAllMovies(PageRequest.of(((PAGE_SIZE * 2) / 5) + 1, 5)));
+    }
+
+    private void downloadMovies(String id, List<Movie> moviesDownloaded, List<String> moviesFailed) {
+        try {
+            Movie existingMovie = movieService.readMovie(id);
+            if (Objects.nonNull(existingMovie)) {
+                moviesDownloaded.add(existingMovie);
+            } else {
+                MovieDto result = movieService.getMovieDetails(id);
+                movieService.createMovie(result).ifPresentOrElse(moviesDownloaded::add, () -> moviesFailed.add(id));
+            }
+        } catch (Exception e) {
+            log.error("Error al guardar {}", id, e);
+            moviesFailed.add(id);
+        }
     }
 
 }
