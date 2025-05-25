@@ -47,6 +47,10 @@ data:
       director: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[8]/span/a/text()
       cast: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[10]//a/text()
       description: //*[@id="main"]/div/div[1]/div[3]/text()
+  recommendation:
+    studio: ${STUDIO_PAGE:Disney}
+    actor: ${ACTOR_PAGE:Shrek}
+    genre: ${GENRE_PAGE:Sci-fi}
 
 # Actuator config
 management:

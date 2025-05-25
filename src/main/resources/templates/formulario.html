@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/styles/css/main.css}" href="/styles/css/main.css">
+    <link th:href="@{/images/mishtv.png}" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="bg-gray-950 text-white h-screen overflow-hidden">
+
+<nav th:replace="(~{fragments/navbar :: navbar})"></nav>
+<div class="flex relative overflow-hidden" style="height: calc(100vh - 50px)">
+
+    <!-- Sidebar Left -->
+    <aside class="bg-[#1f1f23] w-[340px] overflow-hidden scrollable-content p-2">
+        <div th:replace="(~{fragments/sidebar-movies ::
+            sidebar-content(title='PELÍCULAS QUE SIGO',
+            movies=${moviesFollowed})})">
+        </div>
+
+        <div th:replace="(~{fragments/sidebar-movies ::
+            sidebar-content(title='PELÍCULAS DISPONIBLES',
+            movies=${moviesAvailable})})">
+        </div>
+    </aside>
+
+    <!-- Maincard -->
+    <main class="w-full relative flex flex-col px-6 py-4 overflow-hidden scrollable-content" style="scrollbar-width: none">
+
+        <h1 class="text-[54px] font-bold py-2" th:text="${titlePage}">Titles</h1>
+
+        <div class="flex flex-row gap-4">
+            <form class="relative w-full h-full" th:action="@{/backoffice/saveMovie}" method="post">
+                <div class="mb-4">
+                    <label for="id" class="block text-lg font-medium">Codigo</label>
+                    <input type="text" id="id" name="id" class="mt-1 px-2 py-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="image" class="block text-lg font-medium">Url video</label>
+                    <input type="text" id="image" name="image" class="mt-1 px-2 py-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit" class="inline-block bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">Guardar</button>
+                </div>
+            </form>
+
+            <form class="relative w-full h-full" th:action="@{/backoffice/saveMovieList}" method="post">
+                <div class="mb-4">
+                    <label for="moviesCreate" class="block text-lg font-medium">Url video</label>
+                    <textarea type="text" id="moviesCreate" name="moviesCreate" placeholder="Ingresa lista separada por comas y sin espacios"
+                              class="h-[114px] mt-1 px-2 py-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit" class="inline-block bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">Guardar</button>
+                </div>
+            </form>
+
+        </div>
+
+        <div th:if="${urls}">
+            <h2 class="text-lg font-bold py-2"></h2>
+            <ul class="flex flex-col gap-2 text-purple-500">
+                <li th:each="url : ${urls}">
+                    <a th:href="${url}" th:text="${url}">Enlace</a>
+                </li>
+            </ul>
+        </div>
+
+
+
+        <footer class="flex justify-center items-center pt-4 mt-auto">
+            <img class="rounded-lg w-6 h-fit mr-2" th:src="@{/images/mishtv.png}" alt="Logo">
+            Mish.tv <a href="https://github.com/manueljesusmatus" target="_blank" class="text-purple-500 ml-2">@mmatush</a>
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>

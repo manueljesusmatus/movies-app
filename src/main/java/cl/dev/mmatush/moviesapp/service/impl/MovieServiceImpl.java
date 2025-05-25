@@ -34,7 +34,7 @@ public class MovieServiceImpl implements MovieService {
     private final XPathProperties xPathProperties;
 
     @Override
-    @Cacheable(value = "id", key = "#id")
+    @Cacheable(value = "id", key = "#id", unless = "#result==null")
     public Movie readMovie(String id) {
         log.info("GET movie <id: {}>", id);
         try {
@@ -51,7 +51,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Cacheable(value = "actor", key = "#actor")
+    @Cacheable(value = "actor", key = "#actor", unless = "#result==null")
     public List<Movie> readMoviesByCast(String actor){
         log.info("GET movies by cast");
         try {
@@ -66,7 +66,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Cacheable(value = "studio", key = "#studio")
+    @Cacheable(value = "studio", key = "#studio", unless = "#result==null")
     public List<Movie> readMoviesByStudio(String studio){
         log.info("GET movies by studio");
         try {
@@ -81,7 +81,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Cacheable(value = "genre", key = "#genre")
+    @Cacheable(value = "genre", key = "#genre", unless = "#result==null")
     public List<Movie> readMoviesByGenre(String genre){
         log.info("GET movies by genre");
         try {
