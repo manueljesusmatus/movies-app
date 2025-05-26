@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Directorio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/styles/css/main.css}" href="/styles/css/main.css">
+    <link th:href="@{/images/mishtv.png}" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="bg-gray-950 text-white h-screen overflow-hidden">
+
+<nav th:replace="(~{fragments/navbar :: navbar})"></nav>
+<div class="flex relative overflow-hidden" style="height: calc(100vh - 50px)">
+
+    <!-- Sidebar Left -->
+    <aside class="bg-[#1f1f23] w-[340px] overflow-hidden scrollable-content p-2">
+        <div th:replace="(~{fragments/sidebar-movies ::
+            sidebar-content(title='PELÍCULAS QUE SIGO',
+            movies=${moviesFollowed})})">
+        </div>
+
+        <div th:replace="(~{fragments/sidebar-movies ::
+            sidebar-content(title='PELÍCULAS DISPONIBLES',
+            movies=${moviesAvailable})})">
+        </div>
+    </aside>
+
+    <!-- Maincard -->
+    <main class="w-full relative flex flex-col px-6 py-4 overflow-hidden scrollable-content" style="scrollbar-width: none">
+
+        <h1 class="text-[54px] font-bold py-2" th:text="${titlePage}">Titles</h1>
+
+        <div class="grid grid-cols-5 gap-4">
+            <article th:each="movie : ${moviesList}">
+                <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}">
+                    <div class="hoverable-content" >
+                        <div class="clip-inset">
+                            <img class="rounded-lg w-full" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
+                        </div>
+                    </div>
+                    <p class="w-full whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}"></p>
+                    <p th:text="${movie.date}" class="text-xs text-[#adadb8]"></p>
+                </a>
+                <div class="flex flex-row gap-1">
+                    <a th:each="actor : ${movie.cast}" th:text="'#' + ${actor}" th:href="@{/backoffice/cast/{actor}(actor=${actor})}"
+                       class="text-xs text-purple-500 hover:cursor-pointer">
+                    </a>
+                </div>
+                <div class="my-0.5">
+                    <a th:href="@{/backoffice/studio/{studio}(studio=${movie.studio})}">
+                        <span th:text="${movie.studio}"
+                              class="inline-block bg-yellow-600 text-slate-800 rounded-full px-2 text-[11px] font-bold"></span>
+                    </a>
+                </div>
+            </article >
+        </div>
+
+        <footer class="flex justify-center items-center pt-4 mt-auto">
+            <img class="rounded-lg w-6 h-fit mr-2" th:src="@{/images/mishtv.png}" alt="Logo">
+            Mish.tv <a href="https://github.com/manueljesusmatus" target="_blank" class="text-purple-500 ml-2">@mmatush</a>
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>

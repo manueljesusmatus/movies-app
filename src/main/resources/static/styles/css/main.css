@@ -1,0 +1,42 @@
+.custom-video {
+    width: 100%;
+    height: calc(100vh - 170px);
+}
+
+.vjs-fullscreen .custom-video,
+.vjs-fullscreen video {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.button-hoverable:hover {
+    background-color: rgba(83, 83, 95, 0.48);
+    color: #efeff1;
+}
+
+.hoverable-content {
+    background: linear-gradient(180deg,#9146ff 0,#69ffc3 61.98%,#1e69ff);
+}
+
+.hoverable-content:hover {
+    transform: translate3d(0.6rem, -0.6rem, 0px);
+}
+
+.clip-inset {
+    clip-path: inset(5px);
+}
+
+.scrollable-content:hover,
+.scrollable-content:active,
+.scrollable-content:focus {
+    overflow-y: scroll;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 10px;
+}

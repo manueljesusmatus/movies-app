@@ -1,0 +1,99 @@
+# Spring config
+spring:
+  application:
+    name: movies-app
+  data:
+    mongodb:
+      authentication-database: admin
+      host: ${DB_HOST:localhost}
+      port: ${DB_PORT:27017}
+      database: ${DB_NAME:movies}
+      username: ${DB_USER:user}
+      password: ${DB_PASS:pass}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: redis
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:user}
+    password: ${RABBITMQ_PASSWORD:pass}
+
+# Server config
+server:
+  port: 8077
+  servlet:
+    context-path: /api/v1
+
+# Log config
+logging:
+  level:
+    cl.dev.mmatush: TRACE
+
+# Scraping config
+data:
+  page:
+    url: ${URL_PAGE:https://www.imdb.com/es-es/title/}
+    xpath:
+      id: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[3]/text()
+      title: //*[@id="main"]/header/h1/text()
+      image: //*[@id="poster-container"]/a/img/@src
+      date: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[5]/text()
+      studio: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[7]/span/a/text()
+      duration: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[6]/text()
+      genres: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[9]//a/text()
+      director: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[8]/span/a/text()
+      cast: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[10]//a/text()
+      description: //*[@id="main"]/div/div[1]/div[3]/text()
+  recommendation:
+    studio: ${STUDIO_PAGE:Disney}
+    actor: ${ACTOR_PAGE:Shrek}
+    genre: ${GENRE_PAGE:Sci-fi}
+
+# Actuator config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,loggers,heapdump,mappings
+  health:
+    diskspace:
+      enabled: false
+    ssl:
+      enabled: false
+  info:
+    env:
+      enabled: true
+
+# Info config
+info:
+  app:
+    name: Movies API
+    description: Microservicio de peliculas
+    version: 1.0.0
+    env: dev
+
+# Security config
+auth:
+  api-key: X-API-KEY
+  api-secret: ${API-KEY-SECRET:secret}
+  whitelist:
+    - /actuator/health
+    - /swagger-ui
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /v3/api-docs
+    - /v3/api-docs/**
+    - /backoffice
+    - /backoffice/**
+    - /backoffice/**
+    - /backoffice/chat/**
+    - /styles
+    - /styles/**
+    - /css/**
+    - /js
+    - /js/**
+    - /images
+    - /images/**

@@ -1,0 +1,17 @@
+<nav th:fragment="navbar" class="bg-[#18181b] h-[50px] text-white px-4 flex items-center justify-between shadow-md">
+    <!-- Logo -->
+    <div class="flex gap-2 space-x-4 items-center h-full">
+        <a class="flex items-center space-x-2" th:href="@{/backoffice/home}">
+            <img th:src="@{/images/mishtv.png}" alt="Logo" class="h-6 w-auto">
+            <span class="text-md font-bold">Mish.tv</span>
+        </a>
+        <a th:href="@{/backoffice/directory}" class="flex h-full hover:text-purple-400 font-semibold items-center px-2 hover:border-solid hover:border-b-2 hover:border-purple-500">Películas</a>
+        <a th:href="@{/backoffice/formulario}" class="flex h-full hover:text-purple-400 font-semibold items-center px-2 hover:border-solid hover:border-b-2 hover:border-purple-500">Formulario</a>
+    </div>
+
+    <!-- Perfil -->
+    <div class="flex items-center space-x-2">
+        <span class="text-sm font-semibold">Usuario Demo</span>
+        <img src="https://4nite.site/images/webp/Character_DoubleDutyDart.webp" alt="Perfil" class="h-9 w-9 rounded-full border border-purple-500">
+    </div>
+</nav>

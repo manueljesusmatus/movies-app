@@ -22,5 +22,6 @@ public class MovieDto implements Serializable {
     private String director;
     private List<String> cast;
     private String description;
+    private VideoDto video;
 
 }

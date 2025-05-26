@@ -1,4 +1,4 @@
-package cl.dev.mmatush.moviesapp.model;
+package cl.dev.mmatush.moviesapp.model.document;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -26,5 +26,8 @@ public class Movie implements Serializable {
     private String director;
     private List<String> cast;
     private String description;
+    private boolean favorite;
+    private boolean pending;
+    private Video video;
 
 }
