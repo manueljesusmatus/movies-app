@@ -2,10 +2,17 @@ pipeline {
     agent any
 
     tools {
-        maven 'M3'
+        jdk 'Corretto-22'
     }
 
     stages {
+
+        stage('Test Java') {
+            steps {
+                sh 'java -version'
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
