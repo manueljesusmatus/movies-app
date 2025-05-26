@@ -1,3 +1,14 @@
+.custom-video {
+    width: 100%;
+    height: calc(100vh - 170px);
+}
+
+.vjs-fullscreen .custom-video,
+.vjs-fullscreen video {
+    height: 100% !important;
+    width: 100% !important;
+}
+
 .button-hoverable:hover {
     background-color: rgba(83, 83, 95, 0.48);
     color: #efeff1;

@@ -1,7 +1,8 @@
 package cl.dev.mmatush.moviesapp.service;
 
-import cl.dev.mmatush.moviesapp.model.Movie;
+import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,10 +27,8 @@ public interface MovieService {
 
     Optional<Movie> updateMovieIfExists(Movie movie);
 
-    Movie toEntity(MovieDto movieDto);
-
-    MovieDto toDto(Movie movie);
-
     MovieDto getMovieDetails(String movieId);
+
+    Optional<Movie> createVideoDetailsToMovie(String id, VideoDto videoDto);
 
 }

@@ -3,15 +3,16 @@ package cl.dev.mmatush.moviesapp.service.impl;
 import cl.dev.mmatush.moviesapp.configuration.property.XPathProperties;
 import cl.dev.mmatush.moviesapp.exception.DataException;
 import cl.dev.mmatush.moviesapp.exception.ScraperException;
-import cl.dev.mmatush.moviesapp.model.Movie;
+import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.repository.MovieRepository;
+import cl.dev.mmatush.moviesapp.service.MovieMapperService;
 import cl.dev.mmatush.moviesapp.service.MovieService;
 import cl.dev.mmatush.moviesapp.service.ScraperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,9 +30,9 @@ import java.util.Optional;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final ModelMapper modelMapper;
-    private final ScraperService scraperService;
     private final XPathProperties xPathProperties;
+    private final ScraperService scraperService;
+    private final MovieMapperService movieMapperService;
 
     @Override
     @Cacheable(value = "id", key = "#id", unless = "#result==null")
@@ -122,7 +123,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Optional<Movie> createMovie(MovieDto movieDto) {
         try {
-            Movie movie = toEntity(movieDto);
+            Movie movie = movieMapperService.toEntity(movieDto);
             log.info("SAVE movie <id: {}>", movie.getId());
             if (StringUtils.isBlank(movie.getId()))
                 throw new DataException("Movie id es empty");
@@ -156,23 +157,7 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-    @Override
-    public Movie toEntity(MovieDto movieDto) {
-        try {
-            return modelMapper.map(movieDto, Movie.class);
-        } catch (Exception e) {
-            throw new DataException("Error al mapear Dto movie", e);
-        }
-    }
 
-    @Override
-    public MovieDto toDto(Movie movie) {
-        try {
-            return modelMapper.map(movie, MovieDto.class);
-        } catch (Exception e) {
-            throw new DataException("Error al mapear Document movie", e);
-        }
-    }
 
     @Override
     public MovieDto getMovieDetails(String movieId) {
@@ -180,9 +165,27 @@ public class MovieServiceImpl implements MovieService {
             log.info("Obteniendo metadata de <movie: {}>", movieId);
             Map<String, Object> result = scraperService.extractData(xPathProperties.getUrl() + movieId.toLowerCase());
             log.debug("Data obtenida de la web <Movie: {}>", result);
-            return modelMapper.map(result, MovieDto.class);
+            return movieMapperService.toDto(result);
         } catch (Exception e) {
             throw new ScraperException("Error obteniendo detalle de pelicula", e);
+        }
+    }
+
+    @Override
+    public Optional<Movie> createVideoDetailsToMovie(String id, VideoDto videoDto) {
+        try {
+            return movieRepository.findById(id).map(movie -> {
+                log.info("Actualizando <movie: {}, video: {}>", id, videoDto);
+                movie.setVideo(movieMapperService.toEntity(videoDto));
+                return Optional.of(movieRepository.save(movie));
+            }).orElseGet( () -> {
+                log.info("Creando <movie: {}, video: {}>", id, videoDto);
+                MovieDto movieDto = getMovieDetails(id);
+                movieDto.setVideo(videoDto);
+                return createMovie(movieDto);
+            });
+        } catch (Exception e) {
+            throw new DataException("Error al guardar registro de video", e);
         }
     }
 

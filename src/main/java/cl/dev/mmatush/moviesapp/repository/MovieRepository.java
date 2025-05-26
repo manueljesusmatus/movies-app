@@ -1,6 +1,6 @@
 package cl.dev.mmatush.moviesapp.repository;
 
-import cl.dev.mmatush.moviesapp.model.Movie;
+import cl.dev.mmatush.moviesapp.model.document.Movie;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

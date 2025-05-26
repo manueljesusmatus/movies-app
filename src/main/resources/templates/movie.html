@@ -6,6 +6,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/styles/css/main.css}" href="/styles/css/main.css">
     <link th:href="@{/images/mishtv.png}" rel="shortcut icon" type="image/x-icon">
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 </head>
 <body class="bg-gray-950 text-white h-screen overflow-hidden">
 
@@ -36,7 +38,9 @@
 
         <!-- Video -->
         <div class="w-full" style="height: calc(100vh - 170px)">
-            <iframe title="Movie" th:src="@{https://www.youtube.com/embed/dQw4w9WgXcQ}" class="w-full rounded" style="height: calc(100vh - 170px)" allowfullscreen></iframe>
+            <video id="video" class="video-js vjs-default-skin w-full custom-video" controls preload="auto" data-setup='{}'>
+                <source th:src="${movie.video.url}" type="video/mp4">
+            </video>
         </div>
 
         <!-- Movie Info -->
@@ -83,5 +87,6 @@
     <!-- Sidebar Right -->
     <!--<aside th:replace="~{fragments/chat :: chat}"></aside>-->
 </div>
+<script th:src="@{/js/video.js}"></script>
 </body>
 </html>

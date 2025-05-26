@@ -1,8 +1,9 @@
 package cl.dev.mmatush.moviesapp.controller;
 
-import cl.dev.mmatush.moviesapp.model.Movie;
+import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
 import cl.dev.mmatush.moviesapp.model.dto.RestResponsePage;
+import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -75,6 +76,14 @@ public class MovieController {
     @GetMapping("/data/{id}")
     public MovieDto getMovieDetails(@PathVariable String id) {
         return movieService.getMovieDetails(id);
+    }
+
+    @PostMapping("/data")
+    public List<Movie> postVideoMovie(@RequestBody List<VideoDto> videos) {
+        return videos.stream()
+                .map(videoDto -> movieService.createVideoDetailsToMovie(videoDto.getId(), videoDto).orElse(null))
+                .filter(Objects::nonNull)
+                .toList();
     }
 
 }
