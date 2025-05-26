@@ -28,6 +28,7 @@ public class Movie implements Serializable {
     private String description;
     private boolean favorite;
     private boolean pending;
+    private int rating;
     private Video video;
 
 }

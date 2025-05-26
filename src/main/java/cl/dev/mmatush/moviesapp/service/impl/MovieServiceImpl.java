@@ -35,7 +35,6 @@ public class MovieServiceImpl implements MovieService {
     private final MovieMapperService movieMapperService;
 
     @Override
-    @Cacheable(value = "id", key = "#id", unless = "#result==null")
     public Movie readMovie(String id) {
         log.info("GET movie <id: {}>", id);
         try {
@@ -67,6 +66,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Page<Movie> readMoviesByCast(String actor, Pageable pageable){
+        log.info("GET movies pageable by cast");
+        try {
+            if (StringUtils.isBlank(actor))
+                throw new DataException("Cast id es empty");
+            Page<Movie> moviePages = movieRepository.findMovieByCastContainsIgnoreCase(List.of(actor), pageable);
+            log.debug("Movies recuperados <Actor: {}, Page: {}>", actor, moviePages.getTotalElements());
+            return moviePages;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas por cast", e);
+        }
+    }
+
+    @Override
     @Cacheable(value = "studio", key = "#studio", unless = "#result==null")
     public List<Movie> readMoviesByStudio(String studio){
         log.info("GET movies by studio");
@@ -82,6 +95,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Page<Movie> readMoviesByStudio(String studio, Pageable pageable){
+        log.info("GET movies pageable by studio");
+        try {
+            if (StringUtils.isBlank(studio))
+                throw new DataException("Studio id es empty");
+            Page<Movie> moviePages = movieRepository.findMovieByStudioEqualsIgnoreCase(studio, pageable);
+            log.debug("Movies recuperados <Studio: {}, Page: {}>", studio, moviePages.getTotalElements());
+            return moviePages;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas de studio", e);
+        }
+    }
+
+    @Override
     @Cacheable(value = "genre", key = "#genre", unless = "#result==null")
     public List<Movie> readMoviesByGenre(String genre){
         log.info("GET movies by genre");
@@ -91,6 +118,20 @@ public class MovieServiceImpl implements MovieService {
             List<Movie> movieList = movieRepository.findMovieByGenresContainsIgnoreCase(genre);
             log.debug("Movies recuperados <Genre: {}, Movie: {}>", genre, movieList.size());
             return movieList;
+        } catch (Exception e) {
+            throw new DataException("Error al recuperar peliculas por genre", e);
+        }
+    }
+
+    @Override
+    public Page<Movie> readMoviesByGenre(String genre, Pageable pageable){
+        log.info("GET movies pageable by genre");
+        try {
+            if (StringUtils.isBlank(genre))
+                throw new DataException("Genre id es empty");
+            Page<Movie> moviePages = movieRepository.findMovieByGenresContainsIgnoreCase(genre, pageable);
+            log.debug("Movies recuperados <Genre: {}, Page: {}>", genre, moviePages.getTotalElements());
+            return moviePages;
         } catch (Exception e) {
             throw new DataException("Error al recuperar peliculas por genre", e);
         }

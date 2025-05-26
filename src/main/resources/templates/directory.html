@@ -31,9 +31,9 @@
         <h1 class="text-[54px] font-bold py-2" th:text="${titlePage}">Titles</h1>
 
         <div class="grid grid-cols-5 gap-4">
-            <article th:each="movie : ${moviesList}">
+            <article th:each="movie : ${pageMovie.content}">
                 <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}">
-                    <div class="hoverable-content" >
+                    <div class="hoverable-content">
                         <div class="clip-inset">
                             <img class="rounded-lg w-full" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
                         </div>
@@ -48,12 +48,30 @@
                 </div>
                 <div class="my-0.5">
                     <a th:href="@{/backoffice/studio/{studio}(studio=${movie.studio})}">
-                        <span th:text="${movie.studio}"
-                              class="inline-block bg-yellow-600 text-slate-800 rounded-full px-2 text-[11px] font-bold"></span>
+                <span th:text="${movie.studio}"
+                      class="inline-block bg-yellow-600 text-slate-800 rounded-full px-2 text-[11px] font-bold"></span>
                     </a>
                 </div>
-            </article >
+            </article>
         </div>
+
+        <div th:if="${pageMovie.totalPages > 1}" class="flex justify-center mt-6 space-x-2 font-bold">
+            <a th:if="${pageMovie.number > 0}"
+               th:href="@{${urlCallback}(pageNumber=${pageMovie.number - 1})}"
+               class="px-3 py-1 bg-purple-200 rounded hover:bg-purple-300 text-purple-500">Anterior</a>
+
+            <span th:each="i : ${#numbers.sequence(0, pageMovie.totalPages - 1)}">
+                <a th:href="@{${urlCallback}(pageNumber=${i})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == pageMovie.number} ? 'bg-purple-500 text-white flex' : 'bg-purple-200 hover:bg-purple-300 flex text-purple-500'"
+                   class="px-3 py-1 rounded mx-0.5"></a>
+            </span>
+
+            <a th:if="${pageMovie.number < pageMovie.totalPages - 1}"
+               th:href="@{${urlCallback}(pageNumber=${pageMovie.number + 1})}"
+               class="px-3 py-1 bg-purple-200 rounded hover:bg-purple-300 text-purple-500">Siguiente</a>
+        </div>
+
 
         <footer class="flex justify-center items-center pt-4 mt-auto">
             <img class="rounded-lg w-6 h-fit mr-2" th:src="@{/images/mishtv.png}" alt="Logo">

@@ -31,7 +31,7 @@ public class BackofficeController {
     private static final int PAGE_SIZE = 10;
     private static final int PAGE_OFFSET = 0;
 
-    private static final String MOVIES_LIST = "moviesList";
+    private static final String MOVIES_LIST = "pageMovie";
     private static final String MOVIES_FOLLOWED_LIST = "moviesFollowed";
     private static final String MOVIES_AVAILABLE_LIST = "moviesAvailable";
     private static final String MOVIES_RECOMMENDED_LIST = "moviesRecommended";
@@ -45,6 +45,7 @@ public class BackofficeController {
 
     private static final String TITLE_ATTRIBUTE = "titlePage";
     private static final String MOVIE_ATTRIBUTE = "movie";
+    private static final String CALLBACK_ATTRIBUTE = "urlCallback";
 
     private final MovieService movieService;
     private final BackofficeProperties properties;
@@ -76,32 +77,42 @@ public class BackofficeController {
     @GetMapping("/directory")
     public String showDirectory(@RequestParam(defaultValue = "0") int pageNumber, Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readAllMovies(PageRequest.of(pageNumber, (int) (PAGE_SIZE * 2.5))));
+        model.addAttribute(MOVIES_LIST, movieService.readAllMovies(PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Directorio");
+        model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/directory");
         return DIRECTORY_PAGE;
     }
 
     @GetMapping("/cast/{actor}")
-    public String showCastMovie(@PathVariable String actor, Model model) {
+    public String showCastMovie(@PathVariable String actor,
+                                @RequestParam(defaultValue = "0") int pageNumber,
+                                Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByCast(actor));
+        model.addAttribute(MOVIES_LIST, movieService.readMoviesByCast(actor, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Todo de " + actor);
+        model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/actor/" + actor);
         return DIRECTORY_PAGE;
     }
 
     @GetMapping("/studio/{studio}")
-    public String showStudioMovie(@PathVariable String studio, Model model) {
+    public String showStudioMovie(@PathVariable String studio,
+                                  @RequestParam(defaultValue = "0") int pageNumber,
+                                  Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByStudio(studio));
+        model.addAttribute(MOVIES_LIST, movieService.readMoviesByStudio(studio, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Estudio " + studio);
+        model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/studio/" + studio);
         return DIRECTORY_PAGE;
     }
 
     @GetMapping("/genre/{genre}")
-    public String showGenreMovie(@PathVariable String genre, Model model) {
+    public String showGenreMovie(@PathVariable String genre,
+                                 @RequestParam(defaultValue = "0") int pageNumber,
+                                 Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByGenre(genre));
+        model.addAttribute(MOVIES_LIST, movieService.readMoviesByGenre(genre, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Explorar " + genre);
+        model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/genre/" + genre);
         return DIRECTORY_PAGE;
     }
 
@@ -142,6 +153,31 @@ public class BackofficeController {
         redirectAttributes.addFlashAttribute(MOVIES_DOWNLOADED_LIST, moviesDownloaded);
         redirectAttributes.addFlashAttribute(MOVIES_FAILED_LIST, moviesFailed);
         return "redirect:/backoffice/formulario";
+    }
+
+    @PostMapping("/favorite")
+    public String toggleFavorite(@RequestParam("movieId") String movieId) {
+        Movie movie = movieService.readMovie(movieId);
+        movie.setFavorite(!movie.isFavorite());
+        movieService.updateMovieIfExists(movie);
+        return "redirect:/backoffice/movie/" + movieId;
+    }
+
+    @PostMapping("/rate")
+    public String rateMovie(@RequestParam("movieId") String movieId,
+                            @RequestParam("rating") int rating) {
+        Movie movie = movieService.readMovie(movieId);
+        movie.setRating(rating);
+        movieService.updateMovieIfExists(movie);
+        return "redirect:/backoffice/movie/" + movieId;
+    }
+
+    @PostMapping("/pending")
+    public String togglePending(@RequestParam("movieId") String movieId) {
+        Movie movie = movieService.readMovie(movieId);
+        movie.setPending(!movie.isPending());
+        movieService.updateMovieIfExists(movie);
+        return "redirect:/backoffice/movie/" + movieId;
     }
 
     private void loadMovies(Model model) {
