@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'Corretto-22'
+        jdk 'Corretto-22-v2'
     }
 
     stages {
