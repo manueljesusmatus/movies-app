@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,20 +64,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Page<Movie> readMoviesByCast(String actor, Pageable pageable){
-        log.info("GET movies pageable by cast");
-        try {
-            if (StringUtils.isBlank(actor))
-                throw new DataException("Cast id es empty");
-            Page<Movie> moviePages = movieRepository.findMovieByCastContainsIgnoreCase(List.of(actor), pageable);
-            log.debug("Movies recuperados <Actor: {}, Page: {}>", actor, moviePages.getTotalElements());
-            return moviePages;
-        } catch (Exception e) {
-            throw new DataException("Error al recuperar peliculas por cast", e);
-        }
-    }
-
-    @Override
     @Cacheable(value = "studio", key = "#studio", unless = "#result==null")
     public List<Movie> readMoviesByStudio(String studio){
         log.info("GET movies by studio");
@@ -89,20 +73,6 @@ public class MovieServiceImpl implements MovieService {
             List<Movie> movieList = movieRepository.findMovieByStudioEqualsIgnoreCase(studio);
             log.debug("Movies recuperados <Studio: {}, Movie: {}>", studio, movieList.size());
             return movieList;
-        } catch (Exception e) {
-            throw new DataException("Error al recuperar peliculas de studio", e);
-        }
-    }
-
-    @Override
-    public Page<Movie> readMoviesByStudio(String studio, Pageable pageable){
-        log.info("GET movies pageable by studio");
-        try {
-            if (StringUtils.isBlank(studio))
-                throw new DataException("Studio id es empty");
-            Page<Movie> moviePages = movieRepository.findMovieByStudioEqualsIgnoreCase(studio, pageable);
-            log.debug("Movies recuperados <Studio: {}, Page: {}>", studio, moviePages.getTotalElements());
-            return moviePages;
         } catch (Exception e) {
             throw new DataException("Error al recuperar peliculas de studio", e);
         }
@@ -124,38 +94,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Page<Movie> readMoviesByGenre(String genre, Pageable pageable){
-        log.info("GET movies pageable by genre");
-        try {
-            if (StringUtils.isBlank(genre))
-                throw new DataException("Genre id es empty");
-            Page<Movie> moviePages = movieRepository.findMovieByGenresContainsIgnoreCase(genre, pageable);
-            log.debug("Movies recuperados <Genre: {}, Page: {}>", genre, moviePages.getTotalElements());
-            return moviePages;
-        } catch (Exception e) {
-            throw new DataException("Error al recuperar peliculas por genre", e);
-        }
-    }
-
-    @Override
     public List<Movie> readAllMovies() {
         log.info("GET all movies");
         try {
             List<Movie> movies = movieRepository.findAll();
             log.debug("Movies recuperadas <Movies: Lista de {} registros>", movies.size());
             return movies;
-        } catch (Exception e) {
-            throw new DataException("Error al recuperar registro de peliculas", e);
-        }
-    }
-
-    @Override
-    public Page<Movie> readAllMovies(Pageable pageable) {
-        log.info("GET all movies pageable <size: {}, number: {}>", pageable.getPageSize(), pageable.getPageNumber());
-        try {
-            Page<Movie> page = movieRepository.findAll(pageable);
-            log.debug("Page recuperada <Page: {}>", page);
-            return page;
         } catch (Exception e) {
             throw new DataException("Error al recuperar registro de peliculas", e);
         }
@@ -197,8 +141,6 @@ public class MovieServiceImpl implements MovieService {
             throw new DataException("Error al actualizar registro de pelicula", e);
         }
     }
-
-
 
     @Override
     public MovieDto getMovieDetails(String movieId) {

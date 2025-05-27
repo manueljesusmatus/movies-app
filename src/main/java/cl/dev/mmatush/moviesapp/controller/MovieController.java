@@ -5,6 +5,7 @@ import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
 import cl.dev.mmatush.moviesapp.model.dto.RestResponsePage;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.service.MovieService;
+import cl.dev.mmatush.moviesapp.service.PaginatedMovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MovieController {
 
+    //TODO: separar controlador
     private final MovieService movieService;
+    private final PaginatedMovieService paginatedMovieService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovie(@PathVariable String id) {
@@ -70,7 +73,7 @@ public class MovieController {
             throw new IllegalArgumentException("pageNumber o pageSize poseen valores incorrectos");
         }
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return new RestResponsePage<>(movieService.readAllMovies(pageable));
+        return new RestResponsePage<>(paginatedMovieService.readAllMovies(pageable));
     }
 
     @GetMapping("/data/{id}")

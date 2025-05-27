@@ -21,4 +21,12 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
 
     Page<Movie> findMovieByGenresContainsIgnoreCase(String genre, Pageable pageable);
 
+    Page<Movie> findMovieByFavorite(boolean favorite, Pageable pageable);
+
+    Page<Movie> findMovieByPending(boolean b, Pageable pageable);
+
+    Page<Movie> findMovieByRatingIs(int rating, Pageable pageable);
+
+    Page<Movie> findMovieByRatingIsNull(Pageable pageable);
+
 }

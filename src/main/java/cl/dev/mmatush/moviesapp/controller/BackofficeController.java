@@ -4,6 +4,7 @@ import cl.dev.mmatush.moviesapp.configuration.property.BackofficeProperties;
 import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
 import cl.dev.mmatush.moviesapp.service.MovieService;
+import cl.dev.mmatush.moviesapp.service.PaginatedMovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +33,8 @@ public class BackofficeController {
     private static final int PAGE_OFFSET = 0;
 
     private static final String MOVIES_LIST = "pageMovie";
-    private static final String MOVIES_FOLLOWED_LIST = "moviesFollowed";
-    private static final String MOVIES_AVAILABLE_LIST = "moviesAvailable";
+    private static final String MOVIES_FAVORITES_LIST = "movieFavorites";
+    private static final String MOVIES_PENDING_LIST = "moviesPending";
     private static final String MOVIES_RECOMMENDED_LIST = "moviesRecommended";
     private static final String MOVIES_DOWNLOADED_LIST = "moviesDownloaded";
     private static final String MOVIES_FAILED_LIST = "moviesFailed";
@@ -48,6 +49,7 @@ public class BackofficeController {
     private static final String CALLBACK_ATTRIBUTE = "urlCallback";
 
     private final MovieService movieService;
+    private final PaginatedMovieService paginatedMovieService;
     private final BackofficeProperties properties;
 
     @GetMapping("/home")
@@ -69,15 +71,16 @@ public class BackofficeController {
 
     @GetMapping("/movie/{id}")
     public String showMovie(@PathVariable String id, Model model) {
-        loadMovies(model);
-        model.addAttribute(MOVIE_ATTRIBUTE, movieService.readMovie(id));
+        Movie movie = movieService.readMovie(id);
+        loadMovies(model, movie);
+        model.addAttribute(MOVIE_ATTRIBUTE, movie);
         return MOVIE_PAGE;
     }
 
     @GetMapping("/directory")
     public String showDirectory(@RequestParam(defaultValue = "0") int pageNumber, Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readAllMovies(PageRequest.of(pageNumber, PAGE_SIZE * 2)));
+        model.addAttribute(MOVIES_LIST, paginatedMovieService.readAllMovies(PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Directorio");
         model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/directory");
         return DIRECTORY_PAGE;
@@ -88,7 +91,7 @@ public class BackofficeController {
                                 @RequestParam(defaultValue = "0") int pageNumber,
                                 Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByCast(actor, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
+        model.addAttribute(MOVIES_LIST, paginatedMovieService.readMoviesByCast(actor, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Todo de " + actor);
         model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/actor/" + actor);
         return DIRECTORY_PAGE;
@@ -99,7 +102,7 @@ public class BackofficeController {
                                   @RequestParam(defaultValue = "0") int pageNumber,
                                   Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByStudio(studio, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
+        model.addAttribute(MOVIES_LIST, paginatedMovieService.readMoviesByStudio(studio, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Estudio " + studio);
         model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/studio/" + studio);
         return DIRECTORY_PAGE;
@@ -110,7 +113,7 @@ public class BackofficeController {
                                  @RequestParam(defaultValue = "0") int pageNumber,
                                  Model model) {
         loadMovies(model);
-        model.addAttribute(MOVIES_LIST, movieService.readMoviesByGenre(genre, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
+        model.addAttribute(MOVIES_LIST, paginatedMovieService.readMoviesByGenre(genre, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Explorar " + genre);
         model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/genre/" + genre);
         return DIRECTORY_PAGE;
@@ -181,9 +184,13 @@ public class BackofficeController {
     }
 
     private void loadMovies(Model model) {
-        model.addAttribute(MOVIES_FOLLOWED_LIST, movieService.readAllMovies(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
-        model.addAttribute(MOVIES_AVAILABLE_LIST, movieService.readAllMovies(PageRequest.of(PAGE_OFFSET + 1, PAGE_SIZE)));
-        model.addAttribute(MOVIES_RECOMMENDED_LIST, movieService.readAllMovies(PageRequest.of(((PAGE_SIZE * 2) / 5) + 1, 5)));
+        model.addAttribute(MOVIES_FAVORITES_LIST, paginatedMovieService.readMoviesByFavorite(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
+        model.addAttribute(MOVIES_PENDING_LIST, paginatedMovieService.readMoviesByPending(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
+    }
+
+    private void loadMovies(Model model, Movie movie) {
+        loadMovies(model);
+        model.addAttribute(MOVIES_RECOMMENDED_LIST, paginatedMovieService.readMoviesRecommended(PageRequest.of(PAGE_OFFSET, PAGE_SIZE), movie));
     }
 
     private void downloadMovies(String id, List<Movie> moviesDownloaded, List<String> moviesFailed) {

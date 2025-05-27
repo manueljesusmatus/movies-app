@@ -17,13 +17,13 @@
     <!-- Sidebar Left -->
     <aside class="bg-[#1f1f23] w-[340px] overflow-hidden scrollable-content p-2">
         <div th:replace="(~{fragments/sidebar-movies ::
-            sidebar-content(title='PELÍCULAS QUE SIGO',
-            movies=${moviesFollowed})})">
+            sidebar-content(title='PELÍCULAS FAVORITAS',
+            movies=${movieFavorites})})">
         </div>
 
         <div th:replace="(~{fragments/sidebar-movies ::
-            sidebar-content(title='PELÍCULAS DISPONIBLES',
-            movies=${moviesAvailable})})">
+            sidebar-content(title='PELÍCULAS PENDIENTES',
+            movies=${moviesPending})})">
         </div>
 
         <div th:replace="(~{fragments/sidebar-movies ::
