@@ -20,7 +20,7 @@
         </div>
 
         <div th:replace="(~{fragments/sidebar-movies ::
-            sidebar-content(title='PELÍCULAS PENDIENTES',
+            sidebar-content(title='PELÍCULAS QUE NO HAS VISTO',
             movies=${moviesPending})})">
         </div>
     </aside>
@@ -36,8 +36,8 @@
         <div>
             <h2 class="text-lg font-semibold mb-2" th:text="'Películas que podrían gustarte'">Movie title</h2>
             <div th:replace="(~{fragments/section-recommended ::
-            section-recommended(moviesList=${moviesRecommended},
-            mostrarMas='/backoffice/directory')})">
+            section-recommended(moviesList=${moviesPending},
+            mostrarMas='/backoffice/unseen')})">
             </div>
         </div>
 

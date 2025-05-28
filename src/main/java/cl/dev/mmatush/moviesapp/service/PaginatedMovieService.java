@@ -14,7 +14,7 @@ public interface PaginatedMovieService {
 
     Page<Movie> readMoviesByFavorite(Pageable pageable);
 
-    Page<Movie> readMoviesByPending(Pageable pageable);
+    Page<Movie> readMoviesUnrated(Pageable pageable);
 
     Page<Movie> readAllMovies(Pageable pageable);
 

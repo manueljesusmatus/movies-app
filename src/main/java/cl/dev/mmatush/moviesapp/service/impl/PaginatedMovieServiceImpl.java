@@ -77,7 +77,7 @@ public class PaginatedMovieServiceImpl implements PaginatedMovieService {
     }
 
     @Override
-    public Page<Movie> readMoviesByPending(Pageable pageable) {
+    public Page<Movie> readMoviesUnrated(Pageable pageable) {
         log.info("GET movies pageable pending");
         try {
             Page<Movie> moviePage = movieRepository.findMovieByRatingIsNull(pageable);

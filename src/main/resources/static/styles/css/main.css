@@ -1,3 +1,18 @@
+.buscador {
+    border-color: rgba(83, 83, 95);
+}
+
+.buscador:hover {
+    box-shadow: inset 0 0 0 1px rgba(83, 83, 95);
+}
+
+.buscador:active,
+.buscador:focus {
+    outline: rgb(168 85 247) solid 2px;
+    box-shadow: inset 0 0 0 1px rgb(168 85 247);
+    border-color: rgb(168 85 247);
+}
+
 .custom-video {
     width: 100%;
     height: calc(100vh - 170px);

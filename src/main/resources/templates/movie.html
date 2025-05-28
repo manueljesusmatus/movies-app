@@ -22,7 +22,7 @@
         </div>
 
         <div th:replace="(~{fragments/sidebar-movies ::
-            sidebar-content(title='PELÍCULAS PENDIENTES',
+            sidebar-content(title='PELÍCULAS QUE NO HAS VISTO',
             movies=${moviesPending})})">
         </div>
 
@@ -55,6 +55,7 @@
                            class="text-xs text-purple-500 hover:cursor-pointer">
                         </a>
                     </p>
+                    <!-- TODO: bug nombre muy largo -->
                     <h1 class="text-md font-bold w-3/4 whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}">Movie title</h1>
                     <p class="justify-center">
                         <span class="text-sm text-gray-400" th:text="${movie.date}">
@@ -113,6 +114,7 @@
                     </div>
                 </div>
 
+                <!-- TODO: mover a main card-->
                 <form th:action="@{/backoffice/favorite}" method="post">
                     <input type="hidden" th:name="movieId" th:value="${movie.id}" />
                     <button type="submit" class="flex items-center gap-2">

@@ -9,6 +9,16 @@
         <a th:href="@{/backoffice/formulario}" class="flex h-full hover:text-purple-400 font-semibold items-center px-2 hover:border-solid hover:border-b-2 hover:border-purple-500">Formulario</a>
     </div>
 
+    <!-- Buscador -->
+    <div class="w-[400px] p-1 flex">
+        <form th:action="@{/backoffice/movie/buscar}" method="post" class="w-full">
+            <div>
+                <input type="text" id="buscar" name="buscar" class="w-full bg-transparent font-semibold px-2 py-1 border-solid border rounded-md buscador" placeholder="Buscar">
+                <label for="buscar" class="hidden"></label>
+            </div>
+        </form>
+    </div>
+
     <!-- Perfil -->
     <div class="flex items-center space-x-2">
         <span class="text-sm font-semibold">Usuario Demo</span>

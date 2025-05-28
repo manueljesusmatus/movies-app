@@ -18,14 +18,17 @@ public class Movie implements Serializable {
     @Id
     private String id;
     private String title;
+    // TODO: imagen a distintas resoluciones
     private String image;
     private String date;
     private String studio;
     private String duration;
     private List<String> genres;
     private String director;
+    // TODO: Convertir en objeto
     private List<String> cast;
     private String description;
+    // TODO: playlists
     private boolean favorite;
     private boolean pending;
     private int rating;

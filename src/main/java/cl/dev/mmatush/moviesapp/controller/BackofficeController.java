@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +30,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class BackofficeController {
+
+    //TODO: controller advice
 
     private static final int PAGE_SIZE = 10;
     private static final int PAGE_OFFSET = 0;
@@ -77,6 +81,11 @@ public class BackofficeController {
         return MOVIE_PAGE;
     }
 
+    @PostMapping("/movie/buscar")
+    public String buscarRedirect(@RequestParam("buscar") String buscar) {
+        return "redirect:/backoffice/movie/" + UriUtils.encodePathSegment(buscar, StandardCharsets.UTF_8);
+    }
+
     @GetMapping("/directory")
     public String showDirectory(@RequestParam(defaultValue = "0") int pageNumber, Model model) {
         loadMovies(model);
@@ -116,6 +125,16 @@ public class BackofficeController {
         model.addAttribute(MOVIES_LIST, paginatedMovieService.readMoviesByGenre(genre, PageRequest.of(pageNumber, PAGE_SIZE * 2)));
         model.addAttribute(TITLE_ATTRIBUTE, "Explorar " + genre);
         model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/genre/" + genre);
+        return DIRECTORY_PAGE;
+    }
+
+    @GetMapping("/unseen")
+    public String showUnseenMovies(@RequestParam(defaultValue = "0") int pageNumber,
+                                   Model model) {
+        loadMovies(model);
+        model.addAttribute(MOVIES_LIST, paginatedMovieService.readMoviesUnrated(PageRequest.of(pageNumber, PAGE_SIZE * 2)));
+        model.addAttribute(TITLE_ATTRIBUTE, "Explorar películas no vistas");
+        model.addAttribute(CALLBACK_ATTRIBUTE, "/backoffice/unseen");
         return DIRECTORY_PAGE;
     }
 
@@ -185,7 +204,7 @@ public class BackofficeController {
 
     private void loadMovies(Model model) {
         model.addAttribute(MOVIES_FAVORITES_LIST, paginatedMovieService.readMoviesByFavorite(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
-        model.addAttribute(MOVIES_PENDING_LIST, paginatedMovieService.readMoviesByPending(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
+        model.addAttribute(MOVIES_PENDING_LIST, paginatedMovieService.readMoviesUnrated(PageRequest.of(PAGE_OFFSET, PAGE_SIZE)));
     }
 
     private void loadMovies(Model model, Movie movie) {
