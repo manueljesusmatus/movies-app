@@ -1,3 +1,7 @@
+.border-color-mishtv {
+    border-color: rgba(83, 83, 95, 0.48);
+}
+
 .buscador {
     border-color: rgba(83, 83, 95);
 }
@@ -13,9 +17,17 @@
     border-color: rgb(168 85 247);
 }
 
+.video-cont {
+    height: calc(100vh - 160px);
+}
+
 .custom-video {
     width: 100%;
-    height: calc(100vh - 170px);
+    height: calc(100vh - 160px);
+}
+
+.height-content {
+    height: calc(100vh - 50px);
 }
 
 .vjs-fullscreen .custom-video,
@@ -54,4 +66,8 @@
 .scrollable-content::-webkit-scrollbar-thumb {
     background-color: darkgray;
     border-radius: 10px;
+}
+
+.scrollable-none {
+    scrollbar-width: none;
 }
