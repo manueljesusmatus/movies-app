@@ -1,3 +1,8 @@
+.badge-mishtv {
+    background-color: rgba(83, 83, 95, 0.38);
+    color: #adadb8;
+}
+
 .border-color-mishtv {
     border-color: rgba(83, 83, 95, 0.48);
 }
@@ -18,12 +23,12 @@
 }
 
 .video-cont {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 150px);
 }
 
 .custom-video {
     width: 100%;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 150px);
 }
 
 .height-content {

@@ -1,5 +1,5 @@
 <aside th:fragment="sidebar (movieFavorites, moviesPending, moviesRecommended, movieId)">
-    <div class="bg-[#1f1f23] w-[340px] h-full overflow-hidden scrollable-content p-2">
+    <div class="bg-[#1f1f23] w-[280px] h-full overflow-hidden scrollable-content p-2">
         <div th:if="${movieFavorites != null && movieFavorites.size() > 0}"
                 th:replace="(~{fragments/sidebar-movies ::
                 sidebar-content(title='PELÍCULAS FAVORITAS',
