@@ -2,6 +2,7 @@ package cl.dev.mmatush.moviesapp.controller;
 
 import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.MovieImageDto;
 import cl.dev.mmatush.moviesapp.model.dto.RestResponsePage;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.service.MovieService;
@@ -81,10 +82,18 @@ public class MovieController {
         return movieService.getMovieDetails(id);
     }
 
-    @PostMapping("/data")
+    @PostMapping("/data/video")
     public List<Movie> postVideoMovie(@RequestBody List<VideoDto> videos) {
         return videos.stream()
                 .map(videoDto -> movieService.createVideoDetailsToMovie(videoDto.getId(), videoDto).orElse(null))
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @PostMapping("/data/image")
+    public List<Movie> postImageMovie(@RequestBody List<MovieImageDto> images) {
+        return images.stream()
+                .map(imagesDto -> movieService.createImageDetailsToMovie(imagesDto.getId(), imagesDto).orElse(null))
                 .filter(Objects::nonNull)
                 .toList();
     }

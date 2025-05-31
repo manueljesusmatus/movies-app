@@ -23,7 +23,8 @@ public class XPathProperties {
     public static class XPath {
         private String id;
         private String title;
-        private String image;
+        private String fullCover;
+        private String thumbnail;
         private String date;
         private String studio;
         private String duration;
@@ -35,17 +36,18 @@ public class XPathProperties {
 
     @PostConstruct
     public void init() {
-        xpaths = Map.of(
-                "id", xpath.getId(),
-                "title", xpath.getTitle(),
-                "image", xpath.getImage(),
-                "date", xpath.getDate(),
-                "studio", xpath.getStudio(),
-                "duration", xpath.getDuration(),
-                "genres", xpath.getGenres(),
-                "director", xpath.getDirector(),
-                "cast", xpath.getCast(),
-                "description", xpath.getDescription()
+        xpaths = Map.ofEntries(
+                Map.entry("id", xpath.getId()),
+                Map.entry("title", xpath.getTitle()),
+                Map.entry("fullCover", xpath.getFullCover()),
+                Map.entry("thumbnail", xpath.getThumbnail()),
+                Map.entry("date", xpath.getDate()),
+                Map.entry("studio", xpath.getStudio()),
+                Map.entry("duration", xpath.getDuration()),
+                Map.entry("genres", xpath.getGenres()),
+                Map.entry("director", xpath.getDirector()),
+                Map.entry("cast", xpath.getCast()),
+                Map.entry("description", xpath.getDescription())
         );
     }
 }

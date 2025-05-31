@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +79,7 @@ public class PaginatedMovieServiceImpl implements PaginatedMovieService {
     public Page<Movie> readMoviesUnrated(Pageable pageable) {
         log.info("GET movies pageable pending");
         try {
-            Page<Movie> moviePage = movieRepository.findMovieByRatingIsNull(pageable);
+            Page<Movie> moviePage = movieRepository.findMovieByRatingIs(0, pageable);
             log.debug("Movies recuperados <Pending> {}", moviePage.getTotalElements());
             return moviePage;
         } catch (Exception e) {

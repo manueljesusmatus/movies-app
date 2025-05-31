@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface ScraperService {
 
-    Map<String, Object> extractData(String url) throws IOException;
+    Map<String, Object> extractData(String movieId) throws IOException;
 
 }

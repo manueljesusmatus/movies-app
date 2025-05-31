@@ -71,7 +71,7 @@
                     <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}">
                         <div class="hoverable-content" >
                             <div class="clip-inset">
-                                <img class="rounded-lg w-full" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
+                                <img th:if="${movie.images != null}" class="rounded-lg w-full" th:src="${movie.images.fullCover}" th:alt="'movie ' + ${movie.id}">
                             </div>
                         </div>
                         <p class="w-full whitespace-nowrap overflow-hidden text-ellipsis" th:text="${movie.title}"></p>

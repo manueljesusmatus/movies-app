@@ -16,8 +16,8 @@
     <aside th:replace="(~{fragments/sidebar ::
                 sidebar(movieFavorites=${movieFavorites},
                 moviesPending=${moviesPending},
-                moviesRecommended=null,
-                movieId=null)})">
+                moviesRecommended=${moviesRecommended},
+                movieId=${movieId})})">
     </aside>
 
     <!-- Maincard -->

@@ -1,8 +1,10 @@
 package cl.dev.mmatush.moviesapp.service;
 
 import cl.dev.mmatush.moviesapp.model.document.Movie;
+import cl.dev.mmatush.moviesapp.model.document.MovieImage;
 import cl.dev.mmatush.moviesapp.model.document.Video;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.MovieImageDto;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 
 import java.util.Map;
@@ -18,5 +20,9 @@ public interface MovieMapperService {
     Video toEntity(VideoDto videoDto);
 
     VideoDto toDto(Video video);
+
+    MovieImage toEntity(MovieImageDto movieImageDto);
+
+    MovieImageDto toDto(MovieImage movieImage);
 
 }

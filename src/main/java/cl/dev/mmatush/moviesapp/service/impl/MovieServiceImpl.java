@@ -1,10 +1,10 @@
 package cl.dev.mmatush.moviesapp.service.impl;
 
-import cl.dev.mmatush.moviesapp.configuration.property.XPathProperties;
 import cl.dev.mmatush.moviesapp.exception.DataException;
 import cl.dev.mmatush.moviesapp.exception.ScraperException;
 import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.MovieImageDto;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.repository.MovieRepository;
 import cl.dev.mmatush.moviesapp.service.MovieMapperService;
@@ -28,7 +28,6 @@ import java.util.Optional;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final XPathProperties xPathProperties;
     private final ScraperService scraperService;
     private final MovieMapperService movieMapperService;
 
@@ -143,10 +142,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Optional<Movie> updateMovieIfExists(MovieDto movie) {
+        return updateMovieIfExists(movieMapperService.toEntity(movie));
+    }
+
+    @Override
     public MovieDto getMovieDetails(String movieId) {
         try {
             log.info("Obteniendo metadata de <movie: {}>", movieId);
-            Map<String, Object> result = scraperService.extractData(xPathProperties.getUrl() + movieId.toLowerCase());
+            Map<String, Object> result = scraperService.extractData(movieId);
             log.debug("Data obtenida de la web <Movie: {}>", result);
             return movieMapperService.toDto(result);
         } catch (Exception e) {
@@ -169,6 +173,24 @@ public class MovieServiceImpl implements MovieService {
             });
         } catch (Exception e) {
             throw new DataException("Error al guardar registro de video", e);
+        }
+    }
+
+    @Override
+    public Optional<Movie> createImageDetailsToMovie(String id, MovieImageDto imageDto) {
+        try {
+            return movieRepository.findById(id).map(movie -> {
+                log.info("Actualizando <movie: {}, image: {}>", id, imageDto);
+                movie.setImages(movieMapperService.toEntity(imageDto));
+                return Optional.of(movieRepository.save(movie));
+            }).orElseGet( () -> {
+                log.info("Creando <movie: {}, image: {}>", id, imageDto);
+                MovieDto movieDto = getMovieDetails(id);
+                movieDto.setImages(imageDto);
+                return createMovie(movieDto);
+            });
+        } catch (Exception e) {
+            throw new DataException("Error al guardar registro de imagen", e);
         }
     }
 

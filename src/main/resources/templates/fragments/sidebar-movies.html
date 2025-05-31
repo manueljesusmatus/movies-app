@@ -3,7 +3,7 @@
     <ul>
         <li th:each="movie : ${movies}" class="py-1 px-2 hover:bg-slate-800">
             <a th:href="@{/backoffice/movie/{id}(id=${movie.id})}" class="hover:text-purple-500 flex" >
-                <img class="rounded-lg w-14 h-fit mr-2" th:src="${movie.image}" th:alt="'movie ' + ${movie.image}">
+                <img class="rounded-lg w-14 h-fit mr-2" th:if="${movie.images != null}" th:src="${movie.images.fullCover}" th:alt="'movie ' + ${movie.id}">
                 <div class="flex flex-col w-full">
                     <p class="text-sm font-bold" th:text="${movie.id}"></p>
                     <p class="text-xs text-[#adadb8] w-3/4 whitespace-nowrap overflow-hidden text-ellipsis" th:text="${#strings.arrayJoin(movie.cast.toArray(), ' - ')}"></p>

@@ -59,17 +59,15 @@ public class BackofficeController {
     @GetMapping("/home")
     public String showHome(Model model) {
         loadMovies(model);
-        List<Movie> genreRecommendedList = movieService.readMoviesByGenre(properties.getGenre());
+
         model.addAttribute("genreRecommended", properties.getGenre());
-        model.addAttribute("genreRecommendedList", genreRecommendedList.subList(0, Math.min(5, genreRecommendedList.size())));
+        model.addAttribute("genreRecommendedList", getTopMovies(movieService.readMoviesByGenre(properties.getGenre())));
 
-        List<Movie> studioRecommendedList = movieService.readMoviesByStudio(properties.getStudio());
         model.addAttribute("studioRecommended", properties.getStudio());
-        model.addAttribute("studioRecommendedList", studioRecommendedList.subList(0, Math.min(5, studioRecommendedList.size())));
+        model.addAttribute("studioRecommendedList", getTopMovies(movieService.readMoviesByStudio(properties.getStudio())));
 
-        List<Movie> actorRecommendedList = movieService.readMoviesByCast(properties.getActor());
         model.addAttribute("actorRecommended", properties.getActor());
-        model.addAttribute("actorRecommendedList", actorRecommendedList.subList(0, Math.min(5, actorRecommendedList.size())));
+        model.addAttribute("actorRecommendedList", getTopMovies(movieService.readMoviesByCast(properties.getActor())));
         return HOME_PAGE;
     }
 
@@ -200,6 +198,10 @@ public class BackofficeController {
         movie.setPending(!movie.isPending());
         movieService.updateMovieIfExists(movie);
         return "redirect:/backoffice/movie/" + movieId;
+    }
+
+    private List<Movie> getTopMovies(List<Movie> movies) {
+        return movies.subList(0, Math.min(5, movies.size()));
     }
 
     private void loadMovies(Model model) {

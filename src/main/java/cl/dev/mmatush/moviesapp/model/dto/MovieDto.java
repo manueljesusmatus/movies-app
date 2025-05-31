@@ -14,7 +14,7 @@ public class MovieDto implements Serializable {
 
     private String id;
     private String title;
-    private String image;
+    private MovieImageDto images;
     private String date;
     private String studio;
     private String duration;

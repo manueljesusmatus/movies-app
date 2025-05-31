@@ -18,8 +18,7 @@ public class Movie implements Serializable {
     @Id
     private String id;
     private String title;
-    // TODO: imagen a distintas resoluciones
-    private String image;
+    private MovieImage images;
     private String date;
     private String studio;
     private String duration;

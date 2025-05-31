@@ -1,6 +1,7 @@
 package cl.dev.mmatush.moviesapp.controller;
 
 import cl.dev.mmatush.moviesapp.exception.DataException;
+import cl.dev.mmatush.moviesapp.exception.ScraperException;
 import cl.dev.mmatush.moviesapp.model.dto.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage handleDataException(DataException ex) {
         log.error("Error DataException", ex);
+        return generateError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(ScraperException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage handleScraperException(ScraperException ex) {
+        log.error("Error ScraperException", ex);
         return generateError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 

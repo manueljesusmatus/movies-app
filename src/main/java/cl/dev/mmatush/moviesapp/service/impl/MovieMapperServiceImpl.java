@@ -2,8 +2,10 @@ package cl.dev.mmatush.moviesapp.service.impl;
 
 import cl.dev.mmatush.moviesapp.exception.DataException;
 import cl.dev.mmatush.moviesapp.model.document.Movie;
+import cl.dev.mmatush.moviesapp.model.document.MovieImage;
 import cl.dev.mmatush.moviesapp.model.document.Video;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.MovieImageDto;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 import cl.dev.mmatush.moviesapp.service.MovieMapperService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,24 @@ public class MovieMapperServiceImpl implements MovieMapperService {
             return modelMapper.map(video, VideoDto.class);
         } catch (Exception e) {
             throw new DataException("Error al mapear Document video", e);
+        }
+    }
+
+    @Override
+    public MovieImage toEntity(MovieImageDto movieImageDto) {
+        try {
+            return modelMapper.map(movieImageDto, MovieImage.class);
+        } catch (Exception e) {
+            throw new DataException("Error al mapear Dto movie image", e);
+        }
+    }
+
+    @Override
+    public MovieImageDto toDto(MovieImage movieImage) {
+        try {
+            return modelMapper.map(movieImage, MovieImageDto.class);
+        } catch (Exception e) {
+            throw new DataException("Error al mapear Document movie image", e);
         }
     }
 

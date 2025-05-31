@@ -39,7 +39,8 @@ data:
     xpath:
       id: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[3]/text()
       title: //*[@id="main"]/header/h1/text()
-      image: //*[@id="poster-container"]/a/img/@src
+      fullCover: //*[@id="poster-container"]/a/img/@src
+      thumbnail: //*[@id="thumbnailContainer"]/a/img/@src
       date: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[5]/text()
       studio: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[7]/span/a/text()
       duration: //*[@id="main"]/div/div[1]/div[2]/div[2]/p[6]/text()

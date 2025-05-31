@@ -2,6 +2,7 @@ package cl.dev.mmatush.moviesapp.service;
 
 import cl.dev.mmatush.moviesapp.model.document.Movie;
 import cl.dev.mmatush.moviesapp.model.dto.MovieDto;
+import cl.dev.mmatush.moviesapp.model.dto.MovieImageDto;
 import cl.dev.mmatush.moviesapp.model.dto.VideoDto;
 
 import java.util.List;
@@ -23,8 +24,12 @@ public interface MovieService {
 
     Optional<Movie> updateMovieIfExists(Movie movie);
 
+    Optional<Movie> updateMovieIfExists(MovieDto movie);
+
     MovieDto getMovieDetails(String movieId);
 
     Optional<Movie> createVideoDetailsToMovie(String id, VideoDto videoDto);
+
+    Optional<Movie> createImageDetailsToMovie(String id, MovieImageDto imagesDto);
 
 }
